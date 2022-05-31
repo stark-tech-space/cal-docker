@@ -1,4 +1,4 @@
 [submodule "calcom"]
 	path = calcom
-	url = https://github.com/calcom/cal.com.git
-	branch = main
+	url = https://github.com/stark-tech-space/cal.com.git
+	branch = dbee-prod
