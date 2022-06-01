@@ -85,16 +85,16 @@ steps:
       ]
 
   # deploy to cloud run, timeout and environment variables
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    entrypoint: 'gcloud'
-    timeout: 240s
-    args:
-      [
-        'run',
-        'deploy',
-        'dbee-cal',
-        '--image',
-        'asia-northeast1-docker.pkg.dev/${PROJECT_ID}/stark-tech/${REPO_NAME}/${BRANCH_NAME}/${COMMIT_SHA}',
-        '--region',
-        'asia-northeast1',
-      ]
+  # - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  #   entrypoint: 'gcloud'
+  #   timeout: 240s
+  #   args:
+  #     [
+  #       'run',
+  #       'deploy',
+  #       'dbee-cal',
+  #       '--image',
+  #       'asia-northeast1-docker.pkg.dev/${PROJECT_ID}/stark-tech/${REPO_NAME}/${BRANCH_NAME}/${COMMIT_SHA}',
+  #       '--region',
+  #       'asia-northeast1',
+  #     ]
