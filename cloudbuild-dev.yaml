@@ -1,7 +1,27 @@
+availableSecrets:
+  secretManager:
+    - versionName: projects/${PROJECT_ID}/secrets/CALENDSO_ENCRYPTION_KEY/versions/latest
+      env: CALENDSO_ENCRYPTION_KEY
+    - versionName: projects/${PROJECT_ID}/secrets/DATABASE_URL/versions/latest
+      env: DATABASE_URL
+    - versionName: projects/${PROJECT_ID}/secrets/EMAIL_SERVER_PASSWORD/versions/latest
+      env: EMAIL_SERVER_PASSWORD
+    - versionName: projects/${PROJECT_ID}/secrets/EMAIL_SERVER_USER/versions/latest
+      env: EMAIL_SERVER_USER
+    - versionName: projects/${PROJECT_ID}/secrets/GOOGLE_API_CREDENTIALS/versions/latest
+      env: GOOGLE_API_CREDENTIALS
+    - versionName: projects/${PROJECT_ID}/secrets/NEXTAUTH_SECRET/versions/latest
+      env: NEXTAUTH_SECRET
+    - versionName: projects/${PROJECT_ID}/secrets/CRON_API_KEY/versions/latest
+      env: CRON_API_KEY
+    - versionName: projects/${PROJECT_ID}/secrets/ZOOM_CLIENT_ID/versions/latest
+      env: ZOOM_CLIENT_ID
+    - versionName: projects/${PROJECT_ID}/secrets/ZOOM_CLIENT_SECRET/versions/latest
+      env: ZOOM_CLIENT_SECRET
+
 steps:
   # Docker Build
   - name: 'gcr.io/cloud-builders/docker'
-    entrypoint: 'bash'
     env:
       [
         'API_KEY_PREFIX=$_API_KEY_PREFIX',
@@ -52,26 +72,6 @@ steps:
         '--build-arg=ZOOM_CLIENT_SECRET',
         '--network=host',
       ]
-    availableSecrets:
-      secretManager:
-        - versionName: projects/${PROJECT_ID}/secrets/CALENDSO_ENCRYPTION_KEY/versions/latest
-          env: CALENDSO_ENCRYPTION_KEY
-        - versionName: projects/${PROJECT_ID}/secrets/DATABASE_URL/versions/latest
-          env: DATABASE_URL
-        - versionName: projects/${PROJECT_ID}/secrets/EMAIL_SERVER_PASSWORD/versions/latest
-          env: EMAIL_SERVER_PASSWORD
-        - versionName: projects/${PROJECT_ID}/secrets/EMAIL_SERVER_USER/versions/latest
-          env: EMAIL_SERVER_USER
-        - versionName: projects/${PROJECT_ID}/secrets/GOOGLE_API_CREDENTIALS/versions/latest
-          env: GOOGLE_API_CREDENTIALS
-        - versionName: projects/${PROJECT_ID}/secrets/NEXTAUTH_SECRET/versions/latest
-          env: NEXTAUTH_SECRET
-        - versionName: projects/${PROJECT_ID}/secrets/CRON_API_KEY/versions/latest
-          env: CRON_API_KEY
-        - versionName: projects/${PROJECT_ID}/secrets/ZOOM_CLIENT_ID/versions/latest
-          env: ZOOM_CLIENT_ID
-        - versionName: projects/${PROJECT_ID}/secrets/ZOOM_CLIENT_SECRET/versions/latest
-          env: ZOOM_CLIENT_SECRET
 
   # Docker Push
   - name: 'gcr.io/cloud-builders/docker'
@@ -82,18 +82,18 @@ steps:
       ]
 
   # deploy to cloud run, timeout and environment variables
-  #- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-  #  entrypoint: 'gcloud'
-  #  timeout: 240s
-  #  args:
-  #    [
-  #      'compute',
-  #      'instances',
-  #      'create-with-container',
-  #      'my-vm-name',
-  #      '--container-image',
-  #      'asia-northeast1-docker.pkg.dev/${PROJECT_ID}/stark-tech/${REPO_NAME}/${BRANCH_NAME}/${COMMIT_SHA}',
-  #    ]
-  #  env:
-  #    - 'CLOUDSDK_COMPUTE_REGION=us-central1'
-  #    - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'gcloud'
+    timeout: 240s
+    args:
+      [
+        'run',
+        'deploy',
+        'dbee-cal',
+        '--image',
+        'asia-northeast1-docker.pkg.dev/${PROJECT_ID}/stark-tech/${REPO_NAME}/${BRANCH_NAME}/${COMMIT_SHA}',
+        '--region',
+        'asia-northeast1',
+      ]
+    images:
+      - asia-northeast1-docker.pkg.dev/${PROJECT_ID}/stark-tech/${REPO_NAME}/${BRANCH_NAME}/${COMMIT_SHA}
